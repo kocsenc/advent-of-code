@@ -26,27 +26,39 @@ For example, suppose your expense report contained the following:
 In this list, the two entries that sum to 2020 are 1721 and 299. Multiplying them together produces 1721 * 299 = 514579, so the correct answer is 514579.
 
 Of course, your expense report is much larger. Find the two entries that sum to 2020; what do you get if you multiply them together?
+
+--- Part Two ---
+
+The Elves in accounting are thankful for your help; one of them even offers you a starfish coin they had left over from a past vacation. They offer you a second one if you can find three numbers in your expense report that meet the same criteria.
+
+Using the above example again, the three entries that sum to 2020 are 979, 366, and 675. Multiplying them together produces the answer, 241861950.
+
+In your expense report, what is the product of the three entries that sum to 2020?
 '''
+
+import itertools
 
 SUM_TARGET = 2020
 
-def sum_targets_for(target, input_numbers):
+def sum_targets_for(target, number_count, input_numbers):
     results = set()
-    for first_number in input_numbers:
-        for second_number in input_numbers:
-            if first_number + second_number == target:
-                pair = (first_number, second_number) if first_number < second_number else (second_number, first_number)
-
-                results.add(pair)
+    for number_group in itertools.combinations(input_numbers, number_count):
+        if sum(number_group) == target:
+            results.add(number_group)
 
     return results
+
 
 def main(filename='input.txt'):
     with open(filename, 'r') as f:
         input_numbers = list(map(int, f.readlines()))
 
-    sum_target_pairs = sum_targets_for(SUM_TARGET, input_numbers)
-    print(sum_target_pairs)
+    part_one_sum_target_pairs = sum_targets_for(SUM_TARGET, 2, input_numbers)
+    print('Part 1: {}'.format(part_one_sum_target_pairs))
+
+    part_two_sum_target_pairs = sum_targets_for(SUM_TARGET, 3, input_numbers)
+    print('Part 2: {}'.format(part_two_sum_target_pairs))
+
 
 if __name__ == '__main__':
     main()
