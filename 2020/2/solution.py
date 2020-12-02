@@ -3,24 +3,25 @@ import re
 
 PasswordEntry = collections.namedtuple('PasswordEntry', ['min', 'max', 'limit_char', 'password'])
 
+
 def main(filename='input-passwords.txt'):
     password_regex = r'^(?P<minimum>\d{1,})\-(?P<maximum>\d{1,}) (?P<limit_char>\w): (?P<password>\w+)$'
     password_entries = []
     with open(filename, 'r') as f:
         for line in f.readlines():
             m = re.match(password_regex, line)
-            if m:
-                password_entries.append(PasswordEntry(int(m.group('minimum')),
-                                                      int(m.group('maximum')),
-                                                      m.group('limit_char'),
-                                                      m.group('password')))
+            password_entries.append(PasswordEntry(int(m.group('minimum')),
+                                                  int(m.group('maximum')),
+                                                  m.group('limit_char'),
+                                                  m.group('password')))
 
-    valid_password_count = 0
-    for entry in password_entries:
-        if entry.password.count(entry.limit_char) in range(entry.min, entry.max + 1):
-            valid_password_count += 1
 
-    print(valid_password_count)
+    def is_valid_password_entry(entry):
+        return entry.password.count(entry.limit_char) in range(entry.min, entry.max + 1)
+
+    valid_password_entries = filter(is_valid_password_entry, password_entries)
+
+    print(len(list(valid_password_entries)))
 
 
 if __name__ == '__main__':
