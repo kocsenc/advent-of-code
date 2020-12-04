@@ -1,4 +1,6 @@
-
+'''
+This solution was implemented prioritizing speed over code quality.
+'''
 
 
 def main(filename='input.txt'):
@@ -44,15 +46,6 @@ def main(filename='input.txt'):
 
     print('part 1: {}'.format(tree_count2))
     print('trees: {}'.format(tree_count1 * tree_count2 * tree_count3 * tree_count4 * tree_count5))
-
-'''
-Right 1, down 1.
-Right 3, down 1. (This is the slope you already checked.)
-Right 5, down 1.
-Right 7, down 1.
-Right 1, down 2.
-
-'''
 
 if __name__ == '__main__':
     main()
