@@ -1,6 +1,6 @@
 import re
 
-byr_re = re.compile(r'byr:(19[2-8][0-9]|199[0-9]|200[0-2])')  # between 1920-2002
+byr_re = re.compile(r'byr:(19[2-9][0-9]|200[0-2])')  # between 1920-2002
 iyr_re = re.compile(r'iyr:(201[0-9]|2020)')  # between 2010-2020
 eyr_re = re.compile(r'eyr:(202[0-9]|2030)') # between 2020-2030
 hgt_re = re.compile(r'hgt:((1[5-8][0-9]|19[0-3])cm|(59|6[0-9]|7[0-6])in)')  # between 150-193cm or 59-76in
