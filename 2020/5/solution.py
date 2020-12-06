@@ -6,7 +6,18 @@ def main(filename='input.txt'):
     with open(filename, 'r') as f:
         seat_assignments = f.readlines()
 
-    print(max(map(seat_id_for_seat, seat_assignments)))
+    seat_ids = list(map(seat_id_for_seat, seat_assignments))
+    # Part 1
+    print('Part 1 max seat ID: {}'.format(max(seat_ids)))
+
+    # Part 2  516 
+    seat_ids = sorted(seat_ids)
+    for i, _ in enumerate(seat_ids):
+        try:
+            if seat_ids[i] + 1 != seat_ids[i+1]:
+                print('Missing seat ID: {}'.format(seat_ids[i] + 1))
+        except:
+            pass
 
 
 def seat_id_for_seat(seat_code):
