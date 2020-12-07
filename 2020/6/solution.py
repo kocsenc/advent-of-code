@@ -1,3 +1,4 @@
+from functools import reduce
 
 def main(filename='input.txt'):
     with open(filename, 'r') as f:
@@ -10,11 +11,20 @@ def main(filename='input.txt'):
             group_entries.append(entry)
             entry = ''
         else:
-            entry += line.strip()
+            entry += line
     group_entries.append(entry)
 
-    yesses_per_group = [len(set(g)) for g in group_entries]
+    # Part 1
+    yesses_per_group = [len(set(g)) - 1  for g in group_entries]
     print(sum(yesses_per_group))
+
+    # Part 2
+    def intersecting_answer(a1, a2):
+        return a1.intersection(a2)
+
+    # Definitley pushing my boundaries of readability for the sake of code golfing.
+    interescting_yesses_per_group = [reduce(intersecting_answer, map(set, answers.splitlines())) for answers in group_entries]
+    print(sum(map(len, interescting_yesses_per_group)))
 
 
 if __name__ == '__main__':
@@ -69,5 +79,43 @@ In this example, the sum of these counts is 3 + 3 + 3 + 1 + 1 = 11.
 
 For each group, count the number of questions to which anyone answered "yes". What is the sum of those counts?
 
-Your puzzle answer was 6551.
+Your puzzle answer was <redacted>.
+
+--- Part Two ---
+
+As you finish the last group's customs declaration, you notice that you misread one word in the instructions:
+
+You don't need to identify the questions to which anyone answered "yes"; you need to identify the questions to which everyone answered "yes"!
+
+Using the same example as above:
+
+abc
+
+a
+b
+c
+
+ab
+ac
+
+a
+a
+a
+a
+
+b
+
+This list represents answers from five groups:
+
+    In the first group, everyone (all 1 person) answered "yes" to 3 questions: a, b, and c.
+    In the second group, there is no question to which everyone answered "yes".
+    In the third group, everyone answered yes to only 1 question, a. Since some people did not answer "yes" to b or c, they don't count.
+    In the fourth group, everyone answered yes to only 1 question, a.
+    In the fifth group, everyone (all 1 person) answered "yes" to 1 question, b.
+
+In this example, the sum of these counts is 3 + 0 + 1 + 1 + 1 = 6.
+
+For each group, count the number of questions to which everyone answered "yes". What is the sum of those counts?
+
+Your puzzle answer was <redacted>.
 '''
