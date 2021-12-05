@@ -50,18 +50,23 @@ func main() {
 
 	var horizontalPosition int
 	var depth int
+	var aim int
 
 	for _, command := range commands {
 		switch command.name {
 		case "forward":
 			horizontalPosition += command.distance
+			depth += (aim * command.distance)
 		case "up":
-			depth -= command.distance
+			aim -= command.distance
 		case "down":
-			depth += command.distance
+			aim += command.distance
 		}
 	}
 
 	positionProduct := horizontalPosition * depth
-	fmt.Printf("Horizontal Position: %d\nDepth Position: %d\nPosition Product: %d\n", horizontalPosition, depth, positionProduct)
+	fmt.Printf("Horizontal Position: %d\nDepth Position: %d\nPosition Product: %d\n",
+		horizontalPosition,
+		depth,
+		positionProduct)
 }
