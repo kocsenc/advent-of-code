@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+
+	"github.com/asecurityteam/rolling"
 )
 
 func check(e error) {
@@ -13,32 +15,54 @@ func check(e error) {
 	}
 }
 
-func main() {
-	file, err := os.Open("input.txt")
-	check(err)
+func readDepthMeasurementsFromFile(path string) ([]int, error) {
+	file, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
 	defer file.Close()
-	scanner := bufio.NewScanner(file)
 
+	var depths []int
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		depth, e := strconv.Atoi(scanner.Text())
+		if e != nil {
+			panic("Could not Parse integer from depth measurement")
+		}
+		depths = append(depths, depth)
+	}
+
+	return depths, scanner.Err()
+}
+
+func main() {
+	const inputFileName = "input.txt"
+	const scanWindow = 3
+
+	depths, err := readDepthMeasurementsFromFile(inputFileName)
+	check(err)
+
+	var rollingWindow = rolling.NewPointPolicy(rolling.NewWindow(scanWindow))
+
+	for i := 0; i < scanWindow; i = i + 1 {
+		rollingWindow.Append(float64(depths[i]))
+	}
+
+	previousRollingWindowSum := rollingWindow.Reduce(rolling.Sum)
 	var increases int
 	var decreases int
-	var previous int
 
-	// Set Initial value
-	scanner.Scan()
-	previous, err = strconv.Atoi(scanner.Text())
-	check(err)
+	for _, depth := range depths[scanWindow:] {
+		rollingWindow.Append(float64(depth))
 
-	for scanner.Scan() {
-		num, err := strconv.Atoi(scanner.Text())
-		check(err)
-
-		if num > previous {
+		peekRollingWindowSum := rollingWindow.Reduce(rolling.Sum)
+		if peekRollingWindowSum > previousRollingWindowSum {
 			increases++
 		} else {
 			decreases++
 		}
 
-		previous = num
+		previousRollingWindowSum = peekRollingWindowSum
 	}
 
 	fmt.Println(increases)
