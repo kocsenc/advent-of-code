@@ -23,8 +23,29 @@ func isMonotonicWithinRange(_ nums: [Int], minDifference: Int, maxDifference: In
   guard nums.count > 1 else { return true }
 
   let differences = zip(nums, nums.dropFirst()).map { $1 - $0 }
-  return differences.allSatisfy { $0 >= 0 && minDifference...maxDifference ~= $0 }
-    || differences.allSatisfy { $0 <= 0 && minDifference...maxDifference ~= abs($0) }
+
+  if (differences.allSatisfy { $0 >= 0 && minDifference...maxDifference ~= $0 }
+    || differences.allSatisfy { $0 <= 0 && minDifference...maxDifference ~= abs($0) })
+  {
+    return true
+  }
+
+  // We try to remove at most one element to see if we can get a satisfactory report.
+  // This approach is brute force trial and error since algorithmically finding a pattern
+  // still cost the same time complexity and keeps the code simple.
+  for num in nums.enumerated() {
+    var numsCopy = nums
+    numsCopy.remove(at: num.offset)
+
+    let tolerantDifferences = zip(numsCopy, numsCopy.dropFirst()).map { $1 - $0 }
+    if (tolerantDifferences.allSatisfy { $0 >= 0 && minDifference...maxDifference ~= $0 }
+      || tolerantDifferences.allSatisfy { $0 <= 0 && minDifference...maxDifference ~= abs($0) })
+    {
+      return true
+    }
+  }
+
+  return false
 }
 
 func main(filePath: String) {
